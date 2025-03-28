@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Atom, Zap } from "lucide-react";
+import { Atom, Zap, Bomb } from "lucide-react";
 
 interface YieldSelectorProps {
   onYieldChange?: (yieldValue: number) => void;
   onDeviceSelect?: (device: string) => void;
+  onDetonate?: () => void;
   defaultYield?: number;
   defaultDevice?: string;
 }
@@ -22,8 +23,9 @@ interface YieldSelectorProps {
 const YieldSelector = ({
   onYieldChange = () => {},
   onDeviceSelect = () => {},
+  onDetonate = () => {},
   defaultYield = 15,
-  defaultDevice = "custom",
+  defaultDevice = "Little Boy (Hiroshima)",
 }: YieldSelectorProps) => {
   const [selectedDevice, setSelectedDevice] = useState<string>(defaultDevice);
   const [customYield, setCustomYield] = useState<number>(defaultYield);
@@ -160,6 +162,14 @@ const YieldSelector = ({
           </div>
           <div className="text-sm font-bold">{getYieldDisplay()}</div>
         </div>
+
+        <button
+          onClick={onDetonate}
+          className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors mt-4"
+        >
+          <Bomb className="h-5 w-5" />
+          DETONATE
+        </button>
       </div>
     </div>
   );

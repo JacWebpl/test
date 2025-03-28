@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -109,6 +109,13 @@ const ScenarioManager = ({
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [importData, setImportData] = useState("");
 
+  // Reset new scenario name when the main dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      setNewScenarioName("");
+    }
+  }, [isOpen]);
+
   const handleSaveCurrentScenario = () => {
     if (!newScenarioName) return;
 
@@ -165,7 +172,10 @@ const ScenarioManager = ({
 
   return (
     <Dialog open={isOpen}>
-      <DialogContent className="bg-background max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
+      <DialogContent
+        className="bg-background max-w-3xl max-h-[80vh] overflow-hidden flex flex-col"
+        style={{ zIndex: 1000 }}
+      >
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             Scenario Manager
@@ -259,7 +269,7 @@ const ScenarioManager = ({
         open={isNewScenarioDialogOpen}
         onOpenChange={setIsNewScenarioDialogOpen}
       >
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md" style={{ zIndex: 1100 }}>
           <DialogHeader>
             <DialogTitle>Save Current Scenario</DialogTitle>
           </DialogHeader>
@@ -290,7 +300,7 @@ const ScenarioManager = ({
 
       {/* Import Dialog */}
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md" style={{ zIndex: 1100 }}>
           <DialogHeader>
             <DialogTitle>Import Scenarios</DialogTitle>
           </DialogHeader>

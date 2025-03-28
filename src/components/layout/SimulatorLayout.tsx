@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { LatLng } from "leaflet";
 import MapContainer from "../map/MapContainer";
 import ControlPanel from "../controls/ControlPanel";
@@ -25,7 +25,9 @@ const SimulatorLayout = ({ children }: SimulatorLayoutProps) => {
 
   // State for simulation parameters
   const [yield_, setYield] = useState(15); // in kilotons
-  const [selectedDevice, setSelectedDevice] = useState("Hiroshima");
+  const [selectedDevice, setSelectedDevice] = useState(
+    "Little Boy (Hiroshima)",
+  );
   const [windDirection, setWindDirection] = useState(45); // degrees
   const [windSpeed, setWindSpeed] = useState(15); // km/h
   const [showBlastRings, setShowBlastRings] = useState(true);
@@ -38,9 +40,21 @@ const SimulatorLayout = ({ children }: SimulatorLayoutProps) => {
       id: "1",
       position: [40.7128, -74.006] as [number, number],
       yield: 15,
-      name: "Hiroshima-sized",
+      name: "Little Boy (Hiroshima)",
     },
   ]);
+
+  // Update detonation points when yield or device changes
+  useEffect(() => {
+    if (detonationPoints.length > 0) {
+      const updatedPoints = detonationPoints.map((point) => ({
+        ...point,
+        yield: yield_,
+        name: selectedDevice,
+      }));
+      setDetonationPoints(updatedPoints);
+    }
+  }, [yield_, selectedDevice]);
 
   // Handle map click to place detonation point
   const handleMapClick = (latlng: LatLng) => {
@@ -80,7 +94,7 @@ const SimulatorLayout = ({ children }: SimulatorLayoutProps) => {
             number,
           ],
           yield: scenario.yield,
-          name: scenario.name,
+          name: scenario.name || selectedDevice,
         },
       ]);
     }
@@ -88,6 +102,20 @@ const SimulatorLayout = ({ children }: SimulatorLayoutProps) => {
     if (scenario.windSpeed) setWindSpeed(scenario.windSpeed);
 
     setShowScenarioManager(false);
+  };
+
+  // Handle detonation
+  const handleDetonate = () => {
+    // Create a visual effect for detonation
+    const newPoints = [...detonationPoints];
+    // Update the detonation point to trigger re-render with animation
+    setDetonationPoints(newPoints);
+
+    // You could add additional effects here like:
+    // - Flash the screen
+    // - Play a sound
+    // - Trigger animations
+    console.log("Detonation triggered at", newPoints[0]?.position);
   };
 
   return (
@@ -146,7 +174,10 @@ const SimulatorLayout = ({ children }: SimulatorLayoutProps) => {
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
         {/* Map Container */}
-        <div className="flex-1 relative">
+        <div
+          className="flex-1 relative"
+          style={{ zIndex: showScenarioManager ? 0 : 1 }}
+        >
           <MapContainer
             detonationPoints={detonationPoints}
             windDirection={windDirection}
@@ -175,7 +206,7 @@ const SimulatorLayout = ({ children }: SimulatorLayoutProps) => {
           onExport={() => setShowExportDialog(true)}
           onReset={() => {
             setYield(15);
-            setSelectedDevice("Hiroshima");
+            setSelectedDevice("Little Boy (Hiroshima)");
             setWindDirection(45);
             setWindSpeed(15);
             setDetonationPoints([
@@ -183,10 +214,12 @@ const SimulatorLayout = ({ children }: SimulatorLayoutProps) => {
                 id: "1",
                 position: [40.7128, -74.006] as [number, number],
                 yield: 15,
-                name: "Hiroshima-sized",
+                name: "Little Boy (Hiroshima)",
               },
             ]);
           }}
+          onShare={() => setShowScenarioManager(true)}
+          onDetonate={handleDetonate}
         />
       </div>
 

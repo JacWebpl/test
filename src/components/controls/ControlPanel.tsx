@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import YieldSelector from "./YieldSelector";
@@ -6,7 +6,7 @@ import WindSettings from "./WindSettings";
 import CasualtyEstimation from "../results/CasualtyEstimation";
 import DisplayOptions from "./DisplayOptions";
 import ActionButtons from "./ActionButtons";
-import { Sliders, ChevronLeft, ChevronRight } from "lucide-react";
+import { Sliders, ChevronLeft, ChevronRight, Bomb } from "lucide-react";
 
 interface ControlPanelProps {
   collapsed?: boolean;
@@ -22,6 +22,7 @@ interface ControlPanelProps {
   onExport?: () => void;
   onReset?: () => void;
   onShare?: () => void;
+  onDetonate?: () => void;
 }
 
 const ControlPanel = ({
@@ -38,10 +39,17 @@ const ControlPanel = ({
   onExport = () => {},
   onReset = () => {},
   onShare = () => {},
+  onDetonate = () => {},
 }: ControlPanelProps) => {
   const [showBlastRings, setShowBlastRings] = useState(true);
   const [showFallout, setShowFallout] = useState(true);
   const [showPopulationDensity, setShowPopulationDensity] = useState(false);
+
+  // Initialize fallout visibility
+  useEffect(() => {
+    // Ensure fallout is visible on initial load
+    onToggleFallout(true);
+  }, []);
 
   const handleToggleBlastRings = (value: boolean) => {
     setShowBlastRings(value);
@@ -96,6 +104,7 @@ const ControlPanel = ({
           <YieldSelector
             onYieldChange={onYieldChange}
             onDeviceSelect={onDeviceSelect}
+            onDetonate={onDetonate}
           />
 
           <Separator />
