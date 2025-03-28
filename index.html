@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <!-- Skip error handling script in Electron -->
+    <script>
+      if (window.location.protocol !== "file:") {
+        const errorHandlingScript = document.createElement("script");
+        errorHandlingScript.src =
+          "https://api.tempolabs.ai/proxy-asset?url=https://storage.googleapis.com/tempo-public-assets/error-handling.js";
+        document.body.appendChild(errorHandlingScript);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "appId": "com.nukemap.offline",
+  "productName": "NUKEMAP OFFLINE",
+  "directories": {
+    "output": "electron-dist"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/**/*"
+  ],
+  "mac": {
+    "category": "public.app-category.education",
+    "target": ["dmg"]
+  },
+  "win": {
+    "target": ["nsis"],
+    "icon": "public/vite.svg"
+  },
+  "linux": {
+    "target": ["AppImage"],
+    "category": "Education"
+  }
+}
